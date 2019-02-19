@@ -1,0 +1,41 @@
+fun concat(p : int list * int list) : int list =
+    let L = fst(p) in
+    let P = snd(p) in
+    match L with
+        |  []      ->   P
+        |  x :: xs ->   x :: concat((xs, P))
+
+
+fun count(L : int list) : int =
+    let L' = reverse(L) in
+    count'((L', (1, 0)))
+
+fun count'(p : int list * (int * int)) : int =
+    let L = fst(p) in
+    let i = fst(snd(p)) in
+    let res = snd(snd(p)) in
+    match L with
+      | [] -> res
+      | x :: xs -> count'((xs, (10*i, res+i*x)))
+
+fun reverse(L : int list) : int list =
+    match L with
+      | [] -> [] : int list
+      | x :: xs  ->  concat((reverse(xs), [x] : int list))
+
+fun take(p : int list * int) : int list =
+    let a = snd(p) in
+    let L = fst(p) in
+    take' (([]:int list,(L,a)))
+
+fun take' (p : int list * (int list * int)) : int list =
+    let L = fst(snd(p)) in
+    let part = fst(p) in
+    let ind = snd(snd(p)) in
+    if ind = 0 then part
+      else match L with
+              |  [] -> [] : int list
+              |  x :: xs  ->  take' ((concat((part, [x]:int list)),(xs, ind - 1)))
+
+
+in count(take(([1,2,4,5,6,6,7,4,3,2]: int list,6)))

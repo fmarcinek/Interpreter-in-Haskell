@@ -1,0 +1,5 @@
+fun f(x : int) : bool = x
+
+fun g(x : int) : int = x = -x
+
+in 2

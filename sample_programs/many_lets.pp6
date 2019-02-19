@@ -1,0 +1,8 @@
+let x = 3 in
+let x = 2 in
+let z = 1 in
+let x = (fn(x:int) -> x*x + z) in
+let z = (fn(t:int) -> fn(x : int) -> x + t + z) in
+let p = 2 in
+let r = 7 in
+x 7 + x p * x r - z p r * z r (x p)

@@ -1,0 +1,76 @@
+fun swap(p : int list * (int * int)) : int list =
+    let array = fst(p) in
+    let l = fst(snd(p)) in
+    let r = snd(snd(p)) in
+    if l = r then array
+      else
+          let arr1 = take((array, l)) in
+          let arr2 = take((tail((array, l+1)), r-l-1)) in
+          let arr3 = tail((array, r+1)) in
+          let t1 = (element((array,r)) :: arr2) in
+          let t2 = (element((array,l)) :: arr3) in
+          let t3 = concat((t1,t2)) in
+          concat((arr1, t3))
+
+fun reverse(L : int list) : int list =
+    match L with
+      | [] -> [] : int list
+      | x :: xs  ->  concat((reverse(xs), [x] : int list))
+
+fun concat(p : int list * int list) : int list =
+    let L = fst(p) in
+    let P = snd(p) in
+    match L with
+        |  []      ->   P
+        |  x :: xs ->   x :: concat((xs, P))
+
+
+fun element(p : (int list * int)) : int =
+    let index = snd(p) in
+    let lista = fst(p) in
+    match lista with
+        | [] -> 0
+        | h::tail ->
+    if index = 0 then h
+      else let y = index - 1 in element((tail, y))
+
+
+fun count(L : int list) : int =
+    let L' = reverse(L) in
+    count'((L', (1, 0)))
+
+fun count'(p : int list * (int * int)) : int =
+    let L = fst(p) in
+    let i = fst(snd(p)) in
+    let res = snd(snd(p)) in
+    match L with
+      | [] -> res
+      | x :: xs -> count'((xs, (10*i, res+i*x)))
+
+
+fun take(p : int list * int) : int list =
+    let a = snd(p) in
+    let L = fst(p) in
+    take' (([]:int list,(L,a)))
+
+fun take' (p : int list * (int list * int)) : int list =
+    let L = fst(snd(p)) in
+    let part = fst(p) in
+    let ind = snd(snd(p)) in
+    if ind = 0 then part
+      else match L with
+              |  [] -> [] : int list
+              |  x :: xs  ->  take' ((concat((part, [x]:int list)),(xs, ind - 1)))
+
+
+fun tail(p : int list * int) : int list =
+    let a = snd(p) in
+    let L = fst(p) in
+    if a = 0 then L
+      else match L with
+              | [] -> []:int list
+              | x :: xs  -> tail((xs, a-1))
+
+
+
+input x1 x2 x3 x4 x5 x6 x7 in count(swap(([x1,x2,x3,x4,x5,x6, x7]:int list, (2, 5))))
