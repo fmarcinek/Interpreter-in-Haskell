@@ -1,0 +1,137 @@
+fun quicksort(L : int list) : int list =
+    quicksort' (L, (0, length(L)-1))
+
+fun quicksort'(p : (int list * (int * int))) : int list =
+    let array = fst(p) in
+    let start = fst(snd(p)) in
+    let end = snd(snd(p)) in
+    let para = partition((array, (start, end))) in
+    let split = fst(para) in
+    let array' = snd(para) in
+    if start < end then
+            let r = quicksort'((array', (start, split - 1))) in
+            let q = quicksort'((array', (split + 1, end))) in
+            concat((r,(element((array', split))::q) ))
+    elif start = end then [element((array', split))] : int list
+    else [] : int list
+
+
+fun partition(p : int list * (int * int)) : (int * int list) =
+    let array = fst(p) in
+    let start = fst(snd(p)) in
+    let end = snd(snd(p)) in
+    let pivot = element((array, start)) in
+    let para = part(((start,end), (array, pivot))) in
+      let y = snd(para) in
+      let array' = fst(para) in
+      (y, swap((array', (start, y))))
+
+
+fun left(p : ((int * int ) * (int list * int))) : int =
+    let l = fst(fst(p)) in
+    let r = snd(fst(p)) in
+    let array = fst(snd(p)) in
+    let pivot = snd(snd(p)) in
+    if ((l<=r) and (element((array, l)) <= pivot)) then left(((l+1,r),(array, pivot)))
+        else l
+
+fun right(p : ((int * int ) * (int list * int))) : int =
+    let l = fst(fst(p)) in
+    let r = snd(fst(p)) in
+    let array = fst(snd(p)) in
+    let pivot = snd(snd(p)) in
+    if ((l<=r) and (element((array, r)) >= pivot)) then right(((l,r-1),(array, pivot)))
+        else r
+
+fun part(p : ((int * int ) * (int list * int))) : (int list * int) =
+    let l = fst(fst(p)) in
+    let r = snd(fst(p)) in
+    let array = fst(snd(p)) in
+    let pivot = snd(snd(p)) in
+    let L = left((l,r), (array, pivot)) in
+    let P = right((L,r), (array, pivot)) in
+    if L > P then (array, P)
+      else let array' = swap(array, (L,P)) in
+          part((L,P), (array', pivot))
+
+fun swap(p : int list * (int * int)) : int list =
+    let array = fst(p) in
+    let l = fst(snd(p)) in
+    let r = snd(snd(p)) in
+    if l = r then array
+      else
+          let arr1 = take((array, l)) in
+          let arr2 = take((tail((array, l+1)), r-l-1)) in
+          let arr3 = tail((array, r+1)) in
+          let t1 = (element((array,r)) :: arr2) in
+          let t2 = (element((array,l)) :: arr3) in
+          let t3 = concat((t1,t2)) in
+          concat((arr1, t3))
+
+fun tail(p : int list * int) : int list =
+    let a = snd(p) in
+    let L = fst(p) in
+    if a = 0 then L
+      else match L with
+              | [] -> []:int list
+              | x :: xs  -> tail((xs, a-1))
+
+fun take(p : int list * int) : int list =
+    let a = snd(p) in
+    let L = fst(p) in
+    take' (([]:int list,(L,a)))
+
+fun take' (p : int list * (int list * int)) : int list =
+    let L = fst(snd(p)) in
+    let part = fst(p) in
+    let ind = snd(snd(p)) in
+    if ind = 0 then part
+      else match L with
+              |  [] -> [] : int list
+              |  x :: xs  ->  take' ((concat((part, [x]:int list)),(xs, ind - 1)))
+
+
+fun concat(p : int list * int list) : int list =
+    let L = fst(p) in
+    let P = snd(p) in
+    match L with
+        |  []      ->   P
+        |  x :: xs ->   x :: concat((xs, P))
+
+fun length(l : int list) : int =
+    match l with
+        |  []     -> 0
+        |  x :: xs -> length xs + 1
+
+
+fun element(p : (int list * int)) : int =
+    let index = snd(p) in
+    let lista = fst(p) in
+    match lista with
+        | [] -> 0
+        | h::tail ->
+    if index = 0 then h
+      else let y = index - 1 in element((tail, y))
+
+
+
+fun reverse(L : int list) : int list =
+    match L with
+      | [] -> [] : int list
+      | x :: xs  ->  concat((reverse(xs), [x] : int list))
+
+
+fun count(L : int list) : int =
+    let L' = reverse(L) in
+    count'((L', (1, 0)))
+
+fun count'(p : int list * (int * int)) : int =
+    let L = fst(p) in
+    let i = fst(snd(p)) in
+    let res = snd(snd(p)) in
+    match L with
+      | [] -> res
+      | x :: xs -> count'((xs, (10*i, res+i*x)))
+
+
+input y1 y2 y3 y4 y5 in let arr = quicksort([y1, y2, y3, y4, y5] : int list) in count(arr)

@@ -1,0 +1,6 @@
+(*input x1 in if (let x = -5 in let y = 3 in x1+(x*y)) > 0 then 666 else 777*)
+fun sqr(n : int) : int =
+    n + 5
+
+
+input x y in sqr(x)
